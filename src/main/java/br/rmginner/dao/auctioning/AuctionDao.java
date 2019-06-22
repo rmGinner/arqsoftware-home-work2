@@ -1,7 +1,6 @@
 package br.rmginner.dao.auctioning;
 
-import br.rmginner.model.auction.Auction;
-import br.rmginner.dto.auctioning.AuctionDto;
+import br.rmginner.model.auctioning.Auction;
 
 import java.util.List;
 
@@ -16,5 +15,7 @@ public interface AuctionDao {
     List<Auction> findAllAuctions();
 
     boolean closeAuctionBy(Long auctionId, String auctioneerCpf);
+
+    Auction findById(Long id);
 
 }

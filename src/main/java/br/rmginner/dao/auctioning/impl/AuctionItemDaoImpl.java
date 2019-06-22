@@ -2,7 +2,7 @@ package br.rmginner.dao.auctioning.impl;
 
 import br.rmginner.dao.AbstractDao;
 import br.rmginner.dao.auctioning.AuctionItemDao;
-import br.rmginner.model.auction.AuctionItem;
+import br.rmginner.model.auctioning.AuctionItem;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;

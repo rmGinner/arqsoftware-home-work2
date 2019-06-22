@@ -1,9 +1,7 @@
 package br.rmginner.dto.auctioning.bidding;
 
-import br.rmginner.dto.auctioning.AuctionDto;
-import br.rmginner.dto.auctioning.PhoneDto;
+import br.rmginner.dto.person.PhoneDto;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class BidderDto {

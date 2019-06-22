@@ -1,5 +1,7 @@
 package br.rmginner.dto.auctioning;
 
+import br.rmginner.dto.person.PhoneDto;
+
 import java.util.List;
 
 public class AuctioneerDto {
@@ -11,6 +13,11 @@ public class AuctioneerDto {
     private List<PhoneDto> phoneDtoList;
 
     private String email;
+
+
+    public AuctioneerDto(String cpf) {
+        this.cpf = cpf;
+    }
 
     public AuctioneerDto(String cpf, String name, String email) {
         this.cpf = cpf;

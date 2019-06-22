@@ -1,10 +1,12 @@
 package br.rmginner.service.auctioning.bidding.impl;
 
-import br.rmginner.dao.bidding.BidDao;
+import br.rmginner.bo.auctioning.bidding.BidBo;
+import br.rmginner.dao.auctioning.bidding.BidDao;
 import br.rmginner.dto.auctioning.bidding.BidDto;
-import br.rmginner.factory.BidFactory;
-import br.rmginner.factory.auctioning.bidding.BidDtoFactory;
-import br.rmginner.model.auction.Bid;
+import br.rmginner.exception.BusinessValidationException;
+import br.rmginner.factory.auctioning.bidding.model.BidFactory;
+import br.rmginner.factory.auctioning.bidding.dto.BidDtoFactory;
+import br.rmginner.service.auctioning.AuctionService;
 import br.rmginner.service.auctioning.bidding.BidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,19 +20,21 @@ public class BidServiceImpl implements BidService {
     @Autowired
     private BidDao bidDao;
 
-    /**
-     * @see br.rmginner.service.auctioning.bidding.BidService#subscribeBid(br.rmginner.dto.auctioning.bidding.BidDto)
-     */
-    public void subscribeBid(BidDto bidDto) {
-        bidDao.saveBidWithAuctionReference(BidFactory.from(bidDto));
+    @Autowired
+    private AuctionService auctionService;
+
+    @Override
+    public boolean subscribeBid(BidDto bidDto) throws BusinessValidationException {
+        BidBo.validateIfAuctionIsClosed(auctionService.findById(bidDto.getAuctionDto().getId()));
+
+        return bidDao.saveBidWithAuctionReference(BidFactory.from(bidDto));
     }
 
-
-    /**
-     * @see br.rmginner.service.auctioning.bidding.BidService#getSubscribedBidsOfBidder(String)
-     */
     public List<BidDto> getSubscribedBidsOfBidder(String bidderCpf) {
-        return null;
+        return bidDao.getSubscribedBidsOfBidder(bidderCpf)
+                .stream()
+                .map(BidDtoFactory::createFrom)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -40,5 +44,7 @@ public class BidServiceImpl implements BidService {
                 .map(BidDtoFactory::createFrom)
                 .collect(Collectors.toList());
     }
+
+
 
 }

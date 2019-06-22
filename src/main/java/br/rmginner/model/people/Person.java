@@ -24,35 +24,34 @@ public abstract class Person {
     }
 
     public String getCpf() {
-        return null;
+        return cpf;
     }
 
     public void setCpf(String cpf) {
-
+        this.cpf = cpf;
     }
 
     public String getName() {
-        return null;
+        return name;
     }
 
     public void setName(String name) {
-
+        this.name = name;
     }
 
     public List<Phone> getPhones() {
-        return null;
+        return phones;
     }
 
-    public void setPhones(List<Phone> phone) {
-
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
     public String getEmail() {
-        return null;
+        return email;
     }
 
     public void setEmail(String email) {
-
+        this.email = email;
     }
-
 }

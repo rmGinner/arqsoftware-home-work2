@@ -16,6 +16,10 @@ public class AuctionDto {
 
     private AuctionItemDto auctionItemDto;
 
+    public AuctionDto(Long id) {
+        this.id = id;
+    }
+
     public AuctionDto(Long id, AuctioneerDto auctioneerDto, String status, AuctionItemDto auctionItemDto) {
         this.id = id;
         this.auctioneerDto = auctioneerDto;

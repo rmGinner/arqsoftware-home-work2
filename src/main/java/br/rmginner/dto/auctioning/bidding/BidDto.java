@@ -1,8 +1,6 @@
 package br.rmginner.dto.auctioning.bidding;
 
 import br.rmginner.dto.auctioning.AuctionDto;
-import br.rmginner.model.auction.Auction;
-import br.rmginner.model.people.Bidder;
 
 import java.math.BigDecimal;
 

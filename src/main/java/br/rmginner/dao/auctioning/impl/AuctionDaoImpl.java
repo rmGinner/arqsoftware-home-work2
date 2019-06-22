@@ -3,9 +3,9 @@ package br.rmginner.dao.auctioning.impl;
 import br.rmginner.dao.AbstractDao;
 import br.rmginner.dao.auctioning.AuctionDao;
 import br.rmginner.enums.AuctionStatus;
-import br.rmginner.model.auction.Auction;
-import br.rmginner.model.auction.AuctionItem;
-import br.rmginner.model.people.Auctioneer;
+import br.rmginner.model.auctioning.Auction;
+import br.rmginner.model.auctioning.AuctionItem;
+import br.rmginner.model.auctioning.Auctioneer;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
@@ -18,7 +18,7 @@ public class AuctionDaoImpl extends AbstractDao implements AuctionDao {
 
 
     /**
-     * @see br.rmginner.dao.auctioning.AuctionDao#updateAction(br.rmginner.model.auction.Auction)
+     * @see br.rmginner.dao.auctioning.AuctionDao#updateAction(br.rmginner.model.auctioning.Auction)
      */
     public boolean updateAction(Auction auction) {
         try (var conn = getConnectionFactory().getConnection()) {
@@ -58,6 +58,35 @@ public class AuctionDaoImpl extends AbstractDao implements AuctionDao {
         }
 
         return false;
+    }
+
+    @Override
+    public Auction findById(Long id) {
+        try (var conn = getConnectionFactory().getConnection()) {
+            try (var ps = conn.prepareStatement("SELECT * FROM auction WHERE id = ?")) {
+                ps.setLong(1, id);
+
+                try (var rs = ps.executeQuery()) {
+                    if(rs.next()) {
+                        return new Auction(
+                                rs.getLong("id"),
+                                new Auctioneer(rs.getString("owner_cpf")),
+                                rs.getString("status"),
+                                null,
+                                new AuctionItem(rs.getLong("auction_item_id"))
+                        );
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
@@ -103,25 +132,31 @@ public class AuctionDaoImpl extends AbstractDao implements AuctionDao {
                 ps.setString(1, auction.getItem().getName());
                 ps.setString(2, auction.getItem().getDescription());
 
-                Integer savedItemId = ps.executeUpdate();
+                var lastInsertedId = 0L;
+                if (ps.executeUpdate() > 0) {
+                    try (var rsInsertedId = ps.getGeneratedKeys()) {
+                        if (rsInsertedId.next()) {
+                            lastInsertedId = rsInsertedId.getLong(1);
 
-                if (savedItemId > 0) {
-                    try (var ps2 = conn.prepareStatement("INSERT INTO auction(owner_cpf, status,auction_item_id) VALUES(?, ?,?)")) {
-                        ps2.setString(1, auction.getOwner().getCpf());
-                        ps2.setString(2, AuctionStatus.OPENED.getCode());
-                        ps2.setLong(3, savedItemId);
+                            try (var ps2 = conn.prepareStatement("INSERT INTO auction(owner_cpf, status,auction_item_id) VALUES(?, ?,?)")) {
+                                ps2.setString(1, auction.getOwner().getCpf());
+                                ps2.setString(2, AuctionStatus.OPENED.getCode());
+                                ps2.setLong(3, lastInsertedId);
 
+                                var result = ps2.executeUpdate() > 0;
 
-                        var result = ps2.executeUpdate() > 0;
+                                if (result) {
+                                    conn.commit();
+                                }
+                                conn.rollback();
+                                return result;
+                            } catch (SQLException e) {
+                                e.printStackTrace();
 
-                        if (result) {
-                            conn.commit();
+                            }
                         }
-                        conn.rollback();
-                        return result;
                     } catch (SQLException e) {
                         e.printStackTrace();
-
                     }
                 }
             } catch (SQLException e) {

@@ -1,6 +1,6 @@
 package br.rmginner.dao.auctioning;
 
-import br.rmginner.model.people.Auctioneer;
+import br.rmginner.model.auctioning.Auctioneer;
 
 public interface AuctioneerDao {
 

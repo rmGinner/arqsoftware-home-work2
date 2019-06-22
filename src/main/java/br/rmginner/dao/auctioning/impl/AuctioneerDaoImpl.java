@@ -2,9 +2,8 @@ package br.rmginner.dao.auctioning.impl;
 
 import br.rmginner.dao.AbstractDao;
 import br.rmginner.dao.auctioning.AuctioneerDao;
-import br.rmginner.dao.auctioning.PhoneDao;
-import br.rmginner.model.people.Auctioneer;
-import br.rmginner.model.people.Bidder;
+import br.rmginner.dao.person.PhoneDao;
+import br.rmginner.model.auctioning.Auctioneer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +26,7 @@ public class AuctioneerDaoImpl extends AbstractDao implements AuctioneerDao {
 
                 try (var rs = ps.executeQuery()) {
                     try (var rs2 = ps2.executeQuery()) {
-                        if (rs.next()) {
+                        if (rs.next() && rs2.next()) {
                             auctioneer = new Auctioneer(
                                     rs.getString("cpf")
                             );

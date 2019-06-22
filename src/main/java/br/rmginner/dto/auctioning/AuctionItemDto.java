@@ -12,6 +12,10 @@ public class AuctionItemDto {
 
     private String description;
 
+    public AuctionItemDto(Long id) {
+        this.id = id;
+    }
+
     public AuctionItemDto(Long id, String name, String description) {
         this.id = id;
         this.name = name;

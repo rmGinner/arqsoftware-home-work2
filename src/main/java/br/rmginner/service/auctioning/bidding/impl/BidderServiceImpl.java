@@ -1,8 +1,11 @@
 package br.rmginner.service.auctioning.bidding.impl;
 
-import br.rmginner.dao.bidding.BidderDao;
-import br.rmginner.dto.auctioning.PhoneDto;
+import br.rmginner.bo.auctioning.bidding.BidderBo;
+import br.rmginner.dao.auctioning.bidding.BidderDao;
+import br.rmginner.dto.person.PhoneDto;
 import br.rmginner.dto.auctioning.bidding.BidderDto;
+import br.rmginner.exception.BusinessValidationException;
+import br.rmginner.factory.auctioning.bidding.dto.BidderDtoFactory;
 import br.rmginner.service.auctioning.bidding.BidderService;
 import br.rmginner.service.auctioning.bidding.BidService;
 import br.rmginner.dto.auctioning.bidding.BidDto;
@@ -22,19 +25,15 @@ public class BidderServiceImpl implements BidderService {
     @Autowired
     private BidderDao bidderDao;
 
-    /**
-     * @see br.rmginner.service.auctioning.bidding.BidderService#subscribeBid(br.rmginner.dto.auctioning.bidding.BidDto)
-     */
-    public boolean subscribeBid(BidDto bidDto) {
-        return false;
+    @Override
+    public boolean subscribeBid(BidDto bidDto) throws BusinessValidationException {
+        BidderBo.validateIfBidderNotExists(BidderDtoFactory.createFrom(bidderDao.findByCpf(bidDto.getBidderDto().getCpf())));
+
+        return bidService.subscribeBid(bidDto);
     }
 
-
-    /**
-     * @see br.rmginner.service.auctioning.bidding.BidderService#getSubscribedBids(String)
-     */
     public List<BidDto> getSubscribedBids(String token) {
-        return null;
+        return bidService.getSubscribedBidsOfBidder(token);
     }
 
     @Override
