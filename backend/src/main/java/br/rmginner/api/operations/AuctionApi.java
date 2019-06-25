@@ -20,7 +20,7 @@ public class AuctionApi {
     private AuctionService auctionService;
 
     @GetMapping("/open")
-    public ResponseEntity<List<AuctionDto>> geOwnAuctions()  {
+    public ResponseEntity<List<AuctionDto>> getOpenAuctions()  {
         var openedAuctions = this.auctionService.getAllOpenedAuctions();
         final var httpStatusCode = CollectionUtils.isEmpty(openedAuctions) ? HttpStatus.NO_CONTENT : HttpStatus.OK;
 

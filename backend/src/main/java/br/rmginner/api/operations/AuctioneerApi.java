@@ -27,7 +27,7 @@ public class AuctioneerApi {
     }
 
     @GetMapping(path = "{cpf}/auctions")
-    public ResponseEntity<List<AuctionDto>> geOwnAuctions(@PathVariable String cpf) throws BusinessValidationException {
+    public ResponseEntity<List<AuctionDto>> getOwnAuctions(@PathVariable String cpf) throws BusinessValidationException {
         final var ownAuctions = auctioneerService.findOwnAuctions(cpf);
         final var httpStatusCode = CollectionUtils.isEmpty(ownAuctions) ? HttpStatus.NO_CONTENT : HttpStatus.OK;
 
